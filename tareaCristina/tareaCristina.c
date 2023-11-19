@@ -8,27 +8,35 @@
 #define MAX_LINE_LENGHT 50
 #define TAMANIO_ARREGLO 3
 
+
+struct AlumnoN 
+{
+
+};
+
+
 struct Alumno
 {   char nombre [MAX_LINE_LENGHT +1];
     char apellido [MAX_LINE_LENGHT +1];
     int edad;
 }; 
 
+
 struct Alumno arregloAlumnos [TAMANIO_ARREGLO];
 
 
 //Declaración de funciones
 void calculadora();
-void printArreglo(int arreglo []);
+void printArregloEnteros(int arreglo []);
 void ordenarArreglo(int arreglo[]);
-int factorialRecursivo(int num);
 void potencias();
+int factorialRecursivo(int num);
+void contarPalabras();
 
 void ordenarEstructuras(struct Alumno arregloAlumnos []);
 void imprimirArregloEstructuras(struct Alumno arregloAlumnos []);
 void llenarArregloEstructura (struct Alumno arregloAlumnos []);
 void ordenarEstructuras (struct Alumno arregloAlumnos []);
-
 
 
 int procesoFork();
@@ -40,16 +48,16 @@ int main() {
     do {
         // Mostrar el menú
         printf("Menu:\n");
-        printf("1. Opcion 1: Calculadora simple\n");
-        printf("2. Opcion 2: Ordenamiento de arreglos de numeros enteros\n");
-        printf("3. Opcion 3: Calculo de potencia\n");
-        printf("4. Opcion 4: Calculo factorial con funcion recursiva\n");
-        printf("5. Opcion 5: Ordenar estructuras\n");
-        printf("6. Opcion 6: Creacion de proceso con fork()\n");
-        printf("7. Opcion 7\n");
-        printf("8. Opcion 8\n");
-        printf("9. Opcion 9\n");
-        printf("10. Opcion 10\n");
+        printf("1. Calculadora simple\n");
+        printf("2. Ordenamiento de arreglos de numeros enteros\n");
+        printf("3. Calculo de potencia\n");
+        printf("4. Calculo factorial con funcion recursiva\n");
+        printf("5. Contar numero de palabras\n");
+        printf("6. Ordenar estructuras\n");
+        printf("7. Creacion de proceso con fork() \n");
+        printf("8. Creacion de pipes \n");
+        printf("9. Proceso System\n");
+        printf("10. Proceso excel\n");
         printf("0. Salir\n");
         printf("Selecciona una opcion: ");
         scanf("%d", &opcion);
@@ -62,7 +70,7 @@ int main() {
             case 2: 
                 int arreglo[9]= {15,2,45,4,2,9,80,70,19};
                 printf("Este es el arreglo desordenado:\n");
-                printArreglo(arreglo);
+                printArregloEnteros(arreglo);
                 printf("Este es el arreglo ordenado:\n");
                 ordenarArreglo(arreglo);
                 break;
@@ -78,11 +86,15 @@ int main() {
                
                 break;
             case 5:
+
+                contarPalabras();
+                break;
+           
+            case 6:
                 llenarArregloEstructura(arregloAlumnos);
                 imprimirArregloEstructuras(arregloAlumnos);
                 ordenarEstructuras(arregloAlumnos);
                 break;
-            case 6:
             case 7:
             case 8:
             case 9:
@@ -181,36 +193,36 @@ void calculadora() {
 }
 
 //----------------Ordenación de arreglos------------------//
+//Función que ordena el arreglo
+
+void ordenarArreglo( int arreglo[] ){
+
+    int numAux;
+    for (size_t i = 0; i < 9; i++){
+        for (size_t j = 0; j < 9; j++)
+        {
+           if (arreglo[j] > arreglo[i])
+           {    
+            //Se guarda el valor mayor en aux
+                numAux = arreglo[j];
+            // A la posición del valor más alto se le asigna el valor menor
+                arreglo[j] = arreglo[i];
+            //A la posición del valor menor, se le asigna el valor más alto guardado en aux
+                arreglo[i] = numAux;
+           }
+        }
+    }
+    printArregloEnteros( arreglo);
+}
 
 //Función que imprime un arreglo de enteros desordenado
-void printArreglo(int arreglo[]){
+void printArregloEnteros(int arreglo[]){
     
     for (size_t i = 0; i < 9; i++){
         printf("%d ",arreglo[i]);
     }
     printf("\n");
 }
-
-//Función que ordena el arreglo
-
-void ordenarArreglo( int arreglo[] ){
-
-    int numAux;
-
-    for (size_t i = 0; i < 9; i++){
-        for (size_t j = 0; j < 9; j++)
-        {
-           if (arreglo[j] > arreglo[i])
-           {
-                numAux = arreglo[j];
-                arreglo[j] = arreglo[i];
-                arreglo[i] = numAux;
-           }
-        }
-    }
-    printArreglo( arreglo);
-}
-
 //---------Calculo de potencia con bucle for------------//
 
 void potencias() {
@@ -241,6 +253,41 @@ int factorialRecursivo(int num){
         return 1;
     }
 }
+//---------Contar palabras de una cadena------------//
+void limpiarBuffer(void) {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+void contarPalabras(){
+    char cadena[100]; 
+    int contador = 0;
+  
+    limpiarBuffer();//No dejaba introducir datos, habia que limpiar la entrada
+
+    printf("Escribe una frase\n");
+
+    // fgets coge el arreglo (cadena) y lo llenará con el num de caracteres de cadena (sizeof(cadena))
+    // stidin es la entrada stándar de teclado
+    fgets(cadena, sizeof(cadena), stdin);
+
+    for (size_t i = 0; i < strlen(cadena); i++)
+    {  
+        if (cadena[i] == ' ' && i > 0 && cadena[i - 1] != ' ')
+            contador++;
+    }
+    //No contaba la última palabra si no era con espacio al final
+    if (cadena[strlen(cadena) - 1] != ' ') {
+        contador++;
+    }
+    printf("La frase es: %s\n", cadena);
+    printf("Esta frase tiene %d palabras\n", contador);
+    
+ }
+
+
+
+
+
 
 //-------------Ordenación de estructuras--------------//
 
